@@ -9,7 +9,7 @@
     android:paddingRight="8dp">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fff">
@@ -52,6 +52,17 @@
                 android:textColor="#fff" />
 
         </LinearLayout>
+
+        <TextView
+            android:text="Claim"
+            android:layout_height="match_parent"
+            android:id="@+id/claim"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="120dp"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="#fff"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

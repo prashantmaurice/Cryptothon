@@ -56,11 +56,13 @@ public class NetworkController {
         final JsonObjectRequest jsonObjectRequestFinal = new JsonObjectRequest(method, url, jsonRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Logg.d(TAG, "onSuccess" + url);
                 listener.onResponse(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Logg.d(TAG, "onError" + url + " : " + error);
 //                if (error.networkResponse == null)
                     errorListener.onErrorResponse(error);
 //                else{

@@ -12,20 +12,22 @@ import android.widget.ListView;
 
 import com.maurice.cryptothon.app.MainApplication;
 import com.maurice.cryptothon.app.MasterActivity;
-import com.maurice.cryptothon.app.Models.JobObj;
+import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.R;
-import com.maurice.cryptothon.app.Utils.NetworkCallback;
+import com.maurice.cryptothon.app.Utils.Logg;
+import com.maurice.cryptothon.app.Utils.NetworkCallback2;
 import com.maurice.cryptothon.app.storage.Data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the main fragment user for listing user Notifications
  */
 public class OffersFragment extends android.support.v4.app.Fragment {
-
+    String TAG = "OFFERSFRAG";
     public MasterActivity mActivity;
-    ArrayList<JobObj> allSMSDirectories = new ArrayList<>();
+    ArrayList<RestaurantObj> restaurents = new ArrayList<>();
     ListView notificationsLV;
     SwipeRefreshLayout refresh_cont;
     OffersFragAdapter adapter;
@@ -54,39 +56,43 @@ public class OffersFragment extends android.support.v4.app.Fragment {
         rootView = inflater.inflate(R.layout.fragment_notifications, null);
 
         notificationsLV = (ListView) rootView.findViewById(R.id.notificationsLV);
-
-        adapter = new OffersFragAdapter(getActivity(), allSMSDirectories);
+        adapter = new OffersFragAdapter(getActivity(), restaurents);
+        notificationsLV.setAdapter(adapter);
         refresh_cont = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_cont);
         refresh_cont.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refresh_cont.setRefreshing(false);
                 completeRefresh();
             }
         });
-
+        completeRefresh();
         notifyDataSetChanged();
         return rootView;
     }
 
+
     public void completeRefresh(){
-        data.pullOffersFromServer(new NetworkCallback() {
+        Logg.d(TAG,"completeRefresh");
+        Data.getInstance(mActivity).pullOffersFromServer(new NetworkCallback2<List<RestaurantObj>>() {
             @Override
-            public void onSuccess() {
-                notifyDataSetChanged();
-                refresh_cont.setRefreshing(false);
+            public void onSuccess(List<RestaurantObj> objs) {
+                Logg.d(TAG,"completeRefresh onSuccess");
+                restaurents.clear();
+                restaurents.addAll(objs);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onError() {
-                notifyDataSetChanged();
-                refresh_cont.setRefreshing(false);
+                Logg.d(TAG,"completeRefresh onError");
             }
         });
     }
 
     public void notifyDataSetChanged() {
-        allSMSDirectories.clear();
-        allSMSDirectories.addAll(MainApplication.getInstance().data.offers);
+        restaurents.clear();
+        restaurents.addAll(MainApplication.getInstance().data.offers);
         adapter.notifyDataSetChanged();
 
 

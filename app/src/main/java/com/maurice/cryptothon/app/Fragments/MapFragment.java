@@ -19,16 +19,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.maurice.cryptothon.app.MainApplication;
 import com.maurice.cryptothon.app.MasterActivity;
+import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.R;
+import com.maurice.cryptothon.app.Utils.Logg;
+import com.maurice.cryptothon.app.Utils.NetworkCallback2;
+import com.maurice.cryptothon.app.storage.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by maurice on 08/04/17.
  */
 
 public class MapFragment extends Fragment {
+    String TAG = "MAPFRAG";
     public MasterActivity mActivity;
     MapView mMapView;
     private GoogleMap googleMap;
+
+    List<RestaurantObj> restaurents = new ArrayList<>();
 
     public MapFragment() {
     }
@@ -72,15 +82,57 @@ public class MapFragment extends Fragment {
                 googleMap.setMyLocationEnabled(true);
 
                 // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(-34, 151);
-                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+//                LatLng sydney = new LatLng(-34, 151);
+//                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                completeRefresh();
             }
         });
 
         return rootView;
+    }
+
+    public void addMarkers(){
+        if(googleMap!=null){
+            googleMap.clear();
+            for(int i=0;i<restaurents.size();i++){
+                RestaurantObj rObj = restaurents.get(i);
+                googleMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(rObj.lat, rObj.lng))
+                        .title(rObj.name));
+            }
+
+            if(restaurents.size()>0){
+                zoomTo(restaurents.get(0).lat,restaurents.get(0).lng);
+            }
+        }
+    }
+
+    public void zoomTo(Double lat, Double lng){
+        // For zooming automatically to the location of the marker
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(lat, lng)).zoom(15).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    public void completeRefresh(){
+        Logg.d(TAG,"completeRefresh");
+        Data.getInstance(mActivity).pullOffersFromServer(new NetworkCallback2<List<RestaurantObj>>() {
+            @Override
+            public void onSuccess(List<RestaurantObj> objs) {
+                Logg.d(TAG,"completeRefresh onSuccess");
+                restaurents.clear();
+                restaurents.addAll(objs);
+                addMarkers();
+            }
+
+            @Override
+            public void onError() {
+                Logg.d(TAG,"completeRefresh onError");
+            }
+        });
     }
 }

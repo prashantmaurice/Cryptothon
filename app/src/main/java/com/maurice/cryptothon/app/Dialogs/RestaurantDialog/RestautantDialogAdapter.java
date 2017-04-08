@@ -1,4 +1,4 @@
-package com.maurice.cryptothon.app.Fragments.Offers;
+package com.maurice.cryptothon.app.Dialogs.RestaurantDialog;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -6,25 +6,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.maurice.cryptothon.app.Models.RestaurantObj;
+import com.maurice.cryptothon.app.Models.CouponObj;
 import com.maurice.cryptothon.app.R;
-import com.maurice.cryptothon.app.Views.JobViewBuilder;
+import com.maurice.cryptothon.app.Views.CouponViewBuilder;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by maurice on 10/06/15.
  */
-public class OffersFragAdapter extends ArrayAdapter<RestaurantObj> {
+public class RestautantDialogAdapter extends ArrayAdapter<CouponObj> {
     Activity mContext;
-    private final ArrayList<RestaurantObj> offers;
+    private final List<CouponObj> offers;
 
     @Override
     public int getCount() {
         return offers.size();
     }
 
-    public OffersFragAdapter(Activity context, ArrayList<RestaurantObj> offers){
+    public RestautantDialogAdapter(Activity context, List<CouponObj> offers){
         super(context, R.layout.smslist_list_item, offers);
         this.mContext = context;
         this.offers = offers;
@@ -37,14 +37,14 @@ public class OffersFragAdapter extends ArrayAdapter<RestaurantObj> {
         View view = null;
         if (convertView == null) {
             LayoutInflater inflator = mContext.getLayoutInflater();
-            view = JobViewBuilder.getJobCardView(mContext);
+            view = CouponViewBuilder.getJobCardView(mContext);
         } else {
             view = convertView;
         }
 
-        JobViewBuilder.ViewHolder holder = (JobViewBuilder.ViewHolder) view.getTag();
+        CouponViewBuilder.ViewHolder holder = (CouponViewBuilder.ViewHolder) view.getTag();
 
-        RestaurantObj offer = offers.get(position);
+        CouponObj offer = offers.get(position);
         holder.inflateData(offer);
         return view;
     }

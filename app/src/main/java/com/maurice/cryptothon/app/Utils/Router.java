@@ -49,14 +49,20 @@ public class Router {
 
     }
 
-    public static class Jobs{
+    public static class Restaurants {
 
         static Uri.Builder getSubPath(){
-            return getNewDefaultBuilder().path("api/porter-request");
+            return getNewDefaultBuilder().path("api/restaurants");
         }
 
-        public static String offers(){
-            return getSubPath().appendPath("porter").build().toString();
+        public static String all(){
+            return getSubPath().build().toString();
+        }
+        public static String one(){
+            return getSubPath().appendPath("id").build().toString();
+        }
+        public static String claim(){
+            return getSubPath().appendPath("claim").build().toString();
         }
         public static String completed(){
             return getNewDefaultBuilder().path("api/porter-request").build().toString();
