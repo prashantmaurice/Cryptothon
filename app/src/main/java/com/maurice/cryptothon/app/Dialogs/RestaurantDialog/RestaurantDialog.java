@@ -31,7 +31,7 @@ public class RestaurantDialog {
         alertDialog.setTitle(rObj.name);
         ListView lv = (ListView) convertView.findViewById(R.id.lv);
 
-        RestautantDialogAdapter adapter = new RestautantDialogAdapter(activity,rObj.couponObjs);
+        RestautantDialogAdapter adapter = new RestautantDialogAdapter(activity,rObj);
         lv.setAdapter(adapter);
         alertDialog.show();
     }

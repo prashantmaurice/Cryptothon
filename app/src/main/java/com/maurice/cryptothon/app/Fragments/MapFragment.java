@@ -38,7 +38,7 @@ public class MapFragment extends Fragment {
     MapView mMapView;
     private GoogleMap googleMap;
 
-    List<RestaurantObj> restaurents = new ArrayList<>();
+    List<RestaurantObj> restaurants = new ArrayList<>();
 
     public MapFragment() {
     }
@@ -99,15 +99,15 @@ public class MapFragment extends Fragment {
     public void addMarkers(){
         if(googleMap!=null){
             googleMap.clear();
-            for(int i=0;i<restaurents.size();i++){
-                RestaurantObj rObj = restaurents.get(i);
+            for(int i = 0; i< restaurants.size(); i++){
+                RestaurantObj rObj = restaurants.get(i);
                 googleMap.addMarker(new MarkerOptions()
                         .position(new LatLng(rObj.lat, rObj.lng))
                         .title(rObj.name));
             }
 
-            if(restaurents.size()>0){
-                zoomTo(restaurents.get(0).lat,restaurents.get(0).lng);
+            if(restaurants.size()>0){
+                zoomTo(restaurants.get(0).lat, restaurants.get(0).lng);
             }
         }
     }
@@ -124,8 +124,8 @@ public class MapFragment extends Fragment {
             @Override
             public void onSuccess(List<RestaurantObj> objs) {
                 Logg.d(TAG,"completeRefresh onSuccess");
-                restaurents.clear();
-                restaurents.addAll(objs);
+                restaurants.clear();
+                restaurants.addAll(objs);
                 addMarkers();
             }
 

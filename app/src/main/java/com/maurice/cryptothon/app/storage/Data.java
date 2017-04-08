@@ -52,7 +52,7 @@ public class Data {
 
     public void completePullFromServer() {
         pullOffersFromServer(null);
-        pullCompletedFromServer(null);
+//        pullCompletedFromServer(null);
     }
 
     //use this to retreive an instance of Data
@@ -81,7 +81,7 @@ public class Data {
                 Logg.d(TAG, "USER DATA : " + jsonObject.toString());
                 try {
                     JSONObject result = jsonObject.getJSONObject("data");
-                    JSONArray offersJSON = result.getJSONArray("restaurents");
+                    JSONArray offersJSON = result.getJSONArray("restaurants");
                     offers.clear();
                     offers.addAll(decode(offersJSON));
 
@@ -131,16 +131,11 @@ public class Data {
         });
     }
 
-    public void pullRestaurent(String id, final NetworkCallback2<RestaurantObj> callback){
-        String url = Router.Restaurants.one();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("id",id);
-            jsonObject.put("long",77.6135156);
-        } catch (JSONException e) {e.printStackTrace();}
-        Logg.m("MAIN", "Pulling offers data from server : ");
 
-        MainApplication.getInstance().addRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+    public void pullRestaurant(String id, final NetworkCallback2<RestaurantObj> callback){
+        String url = Router.Restaurants.one(id);
+        JSONObject jsonObject = new JSONObject();
+        MainApplication.getInstance().addRequest(Request.Method.GET, url, jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Logg.d(TAG, "USER DATA : " + jsonObject.toString());

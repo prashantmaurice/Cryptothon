@@ -69,27 +69,33 @@ public class CouponObj implements Comparable<CouponObj> {
         return 0;//TODO : implement this
     }
 
-    public void claim(final NetworkCallback callback){
+    public void claim(RestaurantObj restaurantObj, final NetworkCallback callback){
         String url = Router.Restaurants.claim();
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("id",id);
+            jsonObject.put("id",restaurantObj.id);
         } catch (JSONException e) {e.printStackTrace();}
 
-        MainApplication.getInstance().addRequest(Request.Method.GET, url, jsonObject, new Response.Listener<JSONObject>() {
+        MainApplication.getInstance().addRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 Logg.d(TAG, "USER DATA : " + jsonObject.toString());
-//                try {
+                try {
 //                    JSONObject result = jsonObject.getJSONObject("data");
 //                    JSONArray offersJSON = result.getJSONArray("restaurents");
 //                    offers.clear();
 //                    offers.addAll(decode(offersJSON));
+                    Boolean success = jsonObject.getBoolean("success");
+                    if(success){
+                        if(callback!=null) callback.onSuccess();
+                    }else{
+                        if(callback!=null) callback.onError();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-                if(callback!=null) callback.onSuccess();
+
             }
         }, new Response.ErrorListener() {
             @Override

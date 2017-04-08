@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.maurice.cryptothon.app.Models.CouponObj;
+import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.R;
 import com.maurice.cryptothon.app.Views.CouponViewBuilder;
 
@@ -18,16 +19,18 @@ import java.util.List;
 public class RestautantDialogAdapter extends ArrayAdapter<CouponObj> {
     Activity mContext;
     private final List<CouponObj> offers;
+    RestaurantObj restaurantObj;
 
     @Override
     public int getCount() {
         return offers.size();
     }
 
-    public RestautantDialogAdapter(Activity context, List<CouponObj> offers){
-        super(context, R.layout.smslist_list_item, offers);
+    public RestautantDialogAdapter(Activity context, RestaurantObj restaurantObj){
+        super(context, R.layout.smslist_list_item, restaurantObj.couponObjs);
         this.mContext = context;
-        this.offers = offers;
+        this.offers = restaurantObj.couponObjs;
+        this.restaurantObj = restaurantObj;
 
     }
 
@@ -44,8 +47,8 @@ public class RestautantDialogAdapter extends ArrayAdapter<CouponObj> {
 
         CouponViewBuilder.ViewHolder holder = (CouponViewBuilder.ViewHolder) view.getTag();
 
-        CouponObj offer = offers.get(position);
-        holder.inflateData(offer);
+        CouponObj offer = restaurantObj.couponObjs.get(position);
+        holder.inflateData(offer,restaurantObj);
         return view;
     }
 

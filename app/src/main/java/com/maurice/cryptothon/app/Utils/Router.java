@@ -58,8 +58,8 @@ public class Router {
         public static String all(){
             return getSubPath().build().toString();
         }
-        public static String one(){
-            return getSubPath().appendPath("id").build().toString();
+        public static String one(String id){
+            return getSubPath().appendPath("id").appendQueryParameter("id",id).build().toString();
         }
         public static String claim(){
             return getSubPath().appendPath("claim").build().toString();
