@@ -24,21 +24,21 @@ import java.util.List;
 /**
  * This is the main fragment user for listing user Notifications
  */
-public class OffersFragment extends android.support.v4.app.Fragment {
+public class RestaurantsFragment extends android.support.v4.app.Fragment {
     String TAG = "OFFERSFRAG";
     public MasterActivity mActivity;
     ArrayList<RestaurantObj> restaurants = new ArrayList<>();
     ListView notificationsLV;
     SwipeRefreshLayout refresh_cont;
-    OffersFragAdapter adapter;
+    RestaurantsFragAdapter adapter;
     Data data;
 
-    public OffersFragment() {
+    public RestaurantsFragment() {
         data = Data.getInstance(MainApplication.getInstance());
     }
 
-    public static OffersFragment newInstance(MasterActivity activityContext) {
-        OffersFragment myFragment = new OffersFragment();
+    public static RestaurantsFragment newInstance(MasterActivity activityContext) {
+        RestaurantsFragment myFragment = new RestaurantsFragment();
         myFragment.mActivity = activityContext;
         return myFragment;
     }
@@ -56,7 +56,7 @@ public class OffersFragment extends android.support.v4.app.Fragment {
         rootView = inflater.inflate(R.layout.fragment_notifications, null);
 
         notificationsLV = (ListView) rootView.findViewById(R.id.notificationsLV);
-        adapter = new OffersFragAdapter(getActivity(), restaurants);
+        adapter = new RestaurantsFragAdapter(getActivity(), restaurants);
         notificationsLV.setAdapter(adapter);
         refresh_cont = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_cont);
         refresh_cont.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

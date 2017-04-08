@@ -13,15 +13,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CouponObj implements Comparable<CouponObj> {
     String TAG = "COUPON.MODEL";
     public String id = "";
     public String name = "";
-
-    public double lat,lng;
+    public String desc = "";
+    public String type = "checkin";//"checkin", "feedback"
+    public double lat,lng,value;
     public String address;
     public Boolean claimed;
+    public int questionsAnswered;
+    public List<QuestionObj> questions = new ArrayList<>();
+
 
     public CouponObj() {}
 
@@ -31,10 +36,14 @@ public class CouponObj implements Comparable<CouponObj> {
         try {
             re.id = (obj.has("id")) ? obj.getString("id") : null;
             re.name = (obj.has("name")) ? obj.getString("name") : "No name";
+            re.desc = (obj.has("desc")) ? obj.getString("desc") : "No description";
+            re.type = (obj.has("type")) ? obj.getString("type") : "checkin";
             re.lat = (obj.has("lat")) ? obj.getDouble("lat") : 0;
             re.lng = (obj.has("lng")) ? obj.getDouble("lng") : 0;
+            re.value = (obj.has("value")) ? obj.getDouble("value") : 0;
+            re.questionsAnswered = (obj.has("questionsAnswered")) ? obj.getInt("questionsAnswered") : 0;
             re.claimed = (obj.has("claimed")) ? obj.getBoolean("claimed") : false;
-
+            re.questions = (obj.has("questions")) ? QuestionObj.decode(obj.getJSONArray("questions")) : new ArrayList<QuestionObj>();
         } catch (JSONException e) {e.printStackTrace();}
         return re;
     }
@@ -57,6 +66,7 @@ public class CouponObj implements Comparable<CouponObj> {
             jsonObject.put( "name", name );
             jsonObject.put( "lat", lat );
             jsonObject.put( "lng", lng );
+            jsonObject.put( "value", value );
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -104,6 +114,14 @@ public class CouponObj implements Comparable<CouponObj> {
                 if(callback!=null) callback.onError();
             }
         });
+    }
+
+    public int numberOfQuestionsAnswered(){
+        int count = 0;
+        for(int i=0;i<questions.size();i++){
+            if(questions.get(i).rating!=0) count++;
+        }
+        return questionsAnswered + count;
     }
 
 }

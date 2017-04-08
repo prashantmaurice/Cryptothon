@@ -1,6 +1,7 @@
 package com.maurice.cryptothon.app.Dialogs.RestaurantDialog;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.maurice.cryptothon.app.R;
  */
 
 public class RestaurantDialog {
+
+    public static AlertDialog dialog;
 
     static public void show(Activity activity, RestaurantObj rObj){
 //        Dialog dialog = new Dialog(activity);
@@ -30,9 +33,14 @@ public class RestaurantDialog {
         alertDialog.setView(convertView);
         alertDialog.setTitle(rObj.name);
         ListView lv = (ListView) convertView.findViewById(R.id.lv);
-
         RestautantDialogAdapter adapter = new RestautantDialogAdapter(activity,rObj);
         lv.setAdapter(adapter);
-        alertDialog.show();
+        dialog = alertDialog.show();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                dialog = null;
+            }
+        });
     }
 }

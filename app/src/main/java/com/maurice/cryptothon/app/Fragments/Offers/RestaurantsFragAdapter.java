@@ -8,14 +8,14 @@ import android.widget.ArrayAdapter;
 
 import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.R;
-import com.maurice.cryptothon.app.Views.JobViewBuilder;
+import com.maurice.cryptothon.app.Views.RestaurantViewBuilder;
 
 import java.util.ArrayList;
 
 /**
  * Created by maurice on 10/06/15.
  */
-public class OffersFragAdapter extends ArrayAdapter<RestaurantObj> {
+public class RestaurantsFragAdapter extends ArrayAdapter<RestaurantObj> {
     Activity mContext;
     private final ArrayList<RestaurantObj> offers;
 
@@ -24,7 +24,7 @@ public class OffersFragAdapter extends ArrayAdapter<RestaurantObj> {
         return offers.size();
     }
 
-    public OffersFragAdapter(Activity context, ArrayList<RestaurantObj> offers){
+    public RestaurantsFragAdapter(Activity context, ArrayList<RestaurantObj> offers){
         super(context, R.layout.smslist_list_item, offers);
         this.mContext = context;
         this.offers = offers;
@@ -37,12 +37,12 @@ public class OffersFragAdapter extends ArrayAdapter<RestaurantObj> {
         View view = null;
         if (convertView == null) {
             LayoutInflater inflator = mContext.getLayoutInflater();
-            view = JobViewBuilder.getJobCardView(mContext);
+            view = RestaurantViewBuilder.getJobCardView(mContext);
         } else {
             view = convertView;
         }
 
-        JobViewBuilder.ViewHolder holder = (JobViewBuilder.ViewHolder) view.getTag();
+        RestaurantViewBuilder.ViewHolder holder = (RestaurantViewBuilder.ViewHolder) view.getTag();
 
         RestaurantObj offer = offers.get(position);
         holder.inflateData(offer);

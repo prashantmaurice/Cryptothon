@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import com.maurice.cryptothon.app.Models.CouponObj;
 import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.R;
+import com.maurice.cryptothon.app.Utils.SuccessCallback;
 import com.maurice.cryptothon.app.Views.CouponViewBuilder;
 
 import java.util.List;
@@ -48,7 +49,14 @@ public class RestautantDialogAdapter extends ArrayAdapter<CouponObj> {
         CouponViewBuilder.ViewHolder holder = (CouponViewBuilder.ViewHolder) view.getTag();
 
         CouponObj offer = restaurantObj.couponObjs.get(position);
-        holder.inflateData(offer,restaurantObj);
+        holder.inflateData(offer, restaurantObj, new SuccessCallback() {
+            @Override
+            public void onSuccess() {
+                if(RestaurantDialog.dialog!=null){
+                    if(RestaurantDialog.dialog.isShowing()) RestaurantDialog.dialog.dismiss();
+                }
+            }
+        });
         return view;
     }
 

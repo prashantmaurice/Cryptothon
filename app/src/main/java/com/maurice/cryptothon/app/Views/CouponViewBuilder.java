@@ -7,11 +7,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.maurice.cryptothon.app.Controllers.ToastMain;
+import com.maurice.cryptothon.app.Dialogs.FeedbackDialog.FeedbackDialog;
 import com.maurice.cryptothon.app.Models.CouponObj;
 import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.R;
 import com.maurice.cryptothon.app.Utils.Logg;
 import com.maurice.cryptothon.app.Utils.NetworkCallback;
+import com.maurice.cryptothon.app.Utils.SuccessCallback;
 
 
 /**
@@ -50,9 +52,9 @@ public class CouponViewBuilder {
 
         // TODO - WTF! UserActivityObject and ActivityObject classes?! use ONE dude!
 
-        public void inflateData(final CouponObj couponObj, final RestaurantObj restaurantObj){
+        public void inflateData(final CouponObj couponObj, final RestaurantObj restaurantObj, final SuccessCallback callback){
             Logg.d(TAG, "Inflating data in Job view");
-            tv_header.setText(couponObj.id);
+            tv_header.setText(couponObj.name);
             tv_subheader.setText(""+couponObj.name);
             refreshUI(couponObj);
             claim.setOnClickListener(new View.OnClickListener() {
@@ -61,30 +63,43 @@ public class CouponViewBuilder {
                     if (couponObj.claimed){
                         ToastMain.showSmartToast(mContext,"Already Claimed");
                     }else{
-                        couponObj.claim(restaurantObj,new NetworkCallback() {
-                            @Override
-                            public void onSuccess() {
-                                couponObj.claimed = true;
-                                refreshUI(couponObj);
-                                ToastMain.showSmartToast(mContext,"Successfully Claimed");
-                            }
-
-                            @Override
-                            public void onError() {
-                                ToastMain.showSmartToast(mContext,"Error in Claiming Coupon");
-                            }
-                        });
+                        switch (couponObj.type){
+                            case "checkin":claimCheckin(couponObj,restaurantObj,callback);break;
+                            case "feedback":claimFeedback(couponObj,restaurantObj,callback);break;
+                        }
                     }
-
-
                 }
             });
 
         }
 
+        public void claimFeedback(final CouponObj couponObj, final RestaurantObj restaurantObj, SuccessCallback callback){
+            FeedbackDialog.show(mContext,restaurantObj,couponObj,callback);
+
+
+
+        }
+
+        public void claimCheckin(final CouponObj couponObj, final RestaurantObj restaurantObj, final SuccessCallback callback){
+            couponObj.claim(restaurantObj,new NetworkCallback() {
+                @Override
+                public void onSuccess() {
+                    couponObj.claimed = true;
+                    refreshUI(couponObj);
+                    ToastMain.showSmartToast(mContext,"Successfully Claimed");
+                    callback.onSuccess();
+                }
+
+                @Override
+                public void onError() {
+                    ToastMain.showSmartToast(mContext,"Error in Claiming Coupon");
+                }
+            });
+        }
+
         public void refreshUI(CouponObj couponObj){
-            leftcont.setBackgroundResource(!couponObj.claimed ? R.color.colorPrimary : R.color.colorSecondary);
-            claim.setBackgroundResource(!couponObj.claimed ? R.color.colorPrimaryDark : R.color.colorSecondaryDark);
+            leftcont.setBackgroundResource(!couponObj.claimed ? R.color.colorPrimary : R.color.green);
+            claim.setBackgroundResource(!couponObj.claimed ? R.color.colorPrimaryDark : R.color.greenDark);
             claim.setText(!couponObj.claimed ? "Claim" : "Claimed");
         }
 

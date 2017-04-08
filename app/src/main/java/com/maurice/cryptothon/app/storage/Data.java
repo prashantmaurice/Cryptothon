@@ -7,6 +7,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.maurice.cryptothon.app.Controllers.LocalBroadcastHandler;
 import com.maurice.cryptothon.app.MainApplication;
+import com.maurice.cryptothon.app.Models.CouponObj;
 import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.Models.UserMain;
 import com.maurice.cryptothon.app.Utils.Logg;
@@ -148,6 +149,38 @@ public class Data {
                     e.printStackTrace();
                     if(callback!=null) callback.onError();
                 }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Logg.e(TAG, "ERROR : " + volleyError);
+                if(callback!=null) callback.onError();
+            }
+        });
+    }
+
+    public void submitFeedback(RestaurantObj restaurantObj, CouponObj couponObj, final NetworkCallback callback){
+        String url = Router.Restaurants.claimfeedback();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id",restaurantObj.id);
+            jsonObject.put("questionsAnswered",couponObj.numberOfQuestionsAnswered());
+        } catch (JSONException e) {e.printStackTrace();}
+
+        MainApplication.getInstance().addRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Logg.d(TAG, "USER DATA : " + jsonObject.toString());
+//                try {
+//                    JSONObject result = jsonObject.getJSONObject("data");
+//                    JSONArray offersJSON = result.getJSONArray("restaurants");
+//                    offers.clear();
+//                    offers.addAll(decode(offersJSON));
+
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+                if(callback!=null) callback.onSuccess();
             }
         }, new Response.ErrorListener() {
             @Override

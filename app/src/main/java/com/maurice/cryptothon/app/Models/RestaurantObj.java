@@ -11,10 +11,11 @@ public class RestaurantObj implements Comparable<RestaurantObj> {
 
     public String id = "";
     public String name = "";
-
     public double lat,lng;
     public String address;
     public List<CouponObj> couponObjs = new ArrayList<>();
+    public List<MenuItemObj> menu = new ArrayList<>();
+
 
     public RestaurantObj() {}
 
@@ -24,10 +25,12 @@ public class RestaurantObj implements Comparable<RestaurantObj> {
         try {
             re.id = (obj.has("id")) ? obj.getString("id") : null;
             re.name = (obj.has("name")) ? obj.getString("name") : "No name";
+
             re.lat = (obj.has("lat")) ? obj.getDouble("lat") : 0;
             re.lng = (obj.has("lng")) ? obj.getDouble("lng") : 0;
             re.lng = (obj.has("lng")) ? obj.getDouble("lng") : 0;
             re.couponObjs = (obj.has("coupons")) ? CouponObj.decode(obj.getJSONArray("coupons")) : new ArrayList<CouponObj>();
+            re.menu = (obj.has("menu")) ? MenuItemObj.decode(obj.getJSONArray("menu")) : new ArrayList<MenuItemObj>();
         } catch (JSONException e) {e.printStackTrace();}
         return re;
     }
@@ -60,6 +63,14 @@ public class RestaurantObj implements Comparable<RestaurantObj> {
     @Override
     public int compareTo(RestaurantObj another) {
         return 0;//TODO : implement this
+    }
+
+    public int numberClaimed(){
+        int claimed = 0;
+        for(int i=0;i<couponObjs.size();i++){
+            if (couponObjs.get(i).claimed) claimed++;
+        }
+        return claimed;
     }
 
 }

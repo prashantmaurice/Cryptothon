@@ -64,6 +64,9 @@ public class Router {
         public static String claim(){
             return getSubPath().appendPath("claim").build().toString();
         }
+        public static String claimfeedback(){
+            return getSubPath().appendPath("claimfeedback").build().toString();
+        }
         public static String completed(){
             return getNewDefaultBuilder().path("api/porter-request").build().toString();
         }
