@@ -71,6 +71,10 @@ public class Router {
             return getNewDefaultBuilder().path("api/porter-request").build().toString();
         }
 
+        public static String clients(){
+            return getSubPath().appendPath("clients").appendQueryParameter("restaurantId","B1234").build().toString();
+        }
+
     }
 
     public static class User{
@@ -82,6 +86,10 @@ public class Router {
             return getSubPath().appendPath("getAllTransactions").build().toString();
         }
 
+
+        public static String allUsers(){
+            return getSubPath().appendPath("allUsers").build().toString();
+        }
     }
 }
 

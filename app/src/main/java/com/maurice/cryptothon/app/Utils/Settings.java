@@ -27,6 +27,12 @@ public class Settings {
     public final static boolean showDebugToasts = !(runMode== RunMode.PROD);
 
     enum UserMode { SELLER, BUYER }
+    static public boolean isUserSeller(){
+        return userMode == UserMode.SELLER;
+    }
+
+
+//    private final static UserMode userMode = UserMode.BUYER;
     private final static UserMode userMode = UserMode.SELLER;
 }
 

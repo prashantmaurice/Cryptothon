@@ -11,6 +11,7 @@ import com.maurice.cryptothon.app.Models.CouponObj;
 import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.Models.TransactionObj;
 import com.maurice.cryptothon.app.Models.UserMain;
+import com.maurice.cryptothon.app.Models.UserObj;
 import com.maurice.cryptothon.app.Utils.Logg;
 import com.maurice.cryptothon.app.Utils.NetworkCallback;
 import com.maurice.cryptothon.app.Utils.NetworkCallback2;
@@ -21,8 +22,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static com.maurice.cryptothon.app.Models.RestaurantObj.decode;
@@ -43,8 +47,10 @@ public class Data {
     public UserMain userMain;
     Context mContext;
 
+    public Map<String, Long> zoneTimes = new HashMap<>();
     public Set<String> proximityIds = new HashSet<>();
     public ArrayList<TransactionObj> transactions = new ArrayList<>();
+    public ArrayList<UserObj> users = new ArrayList<>();
     public ArrayList<RestaurantObj> offers = new ArrayList<>();
     ArrayList<RestaurantObj> done = new ArrayList<>();
 
@@ -221,6 +227,59 @@ public class Data {
         });
     }
 
+    public void getUsers(final NetworkCallback2<List<UserObj>> callback){
+        String url = Router.Restaurants.clients();
+        JSONObject jsonObject = new JSONObject();
+
+        MainApplication.getInstance().addRequest(Request.Method.GET, url, jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Logg.d(TAG, "USER DATA : " + jsonObject.toString());
+                try {
+                    JSONObject data = jsonObject.getJSONObject("data");
+                    JSONArray transactionsJSON = data.getJSONArray("clients");
+                    users.clear();
+                    users.addAll(UserObj.decode(transactionsJSON));
+                    if(callback!=null) callback.onSuccess(users);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Logg.e(TAG, "ERROR : " + volleyError);
+                if(callback!=null) callback.onError();
+            }
+        });
+    }
+
+    public void postBluetoothAvailability(boolean available, String restaurantId, final NetworkCallback2<List<UserObj>> callback){
+        Logg.d("BLUETOORHJKLH","postBluetoothAvailability");
+        String url = Router.Restaurants.clients();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("clientId","8197711739");
+            jsonObject.put("clientName","Maurice");
+            jsonObject.put("restaurantId",restaurantId);
+            jsonObject.put("isAvailable",available);
+        } catch (JSONException e) {e.printStackTrace();}
+        MainApplication.getInstance().addRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Logg.d(TAG, "USER DATA : " + jsonObject.toString());
+                if(callback!=null) callback.onSuccess(users);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Logg.e(TAG, "ERROR : " + volleyError);
+                if(callback!=null) callback.onError();
+            }
+        });
+    }
+
 
     public void saveCompleteDataLocally(){
         userMain.saveUserDataLocally();
@@ -228,5 +287,21 @@ public class Data {
 
     public boolean isInProximity(String id){
         return proximityIds.contains(id);
+    }
+
+    public void checkIdLeft(){
+
+
+
+        Set<String> keys = zoneTimes.keySet();
+        Iterator it = zoneTimes.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+
+
+
+            System.out.println(pair.getKey() + " = " + pair.getValue());
+            it.remove(); // avoids a ConcurrentModificationException
+        }
     }
 }

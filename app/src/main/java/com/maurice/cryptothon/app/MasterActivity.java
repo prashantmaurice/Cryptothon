@@ -16,6 +16,8 @@ import android.view.View;
 import com.maurice.cryptothon.app.Fragments.MapFragment;
 import com.maurice.cryptothon.app.Fragments.Offers.RestaurantsFragment;
 import com.maurice.cryptothon.app.Fragments.Profile.ProfileFragment;
+import com.maurice.cryptothon.app.Fragments.Users.UsersFragment;
+import com.maurice.cryptothon.app.Utils.Settings;
 
 public class MasterActivity extends MasterBluetoothActivity {
 
@@ -98,36 +100,57 @@ public class MasterActivity extends MasterBluetoothActivity {
         RestaurantsFragment restaurantsFragment;
         MapFragment mapFragment;
         ProfileFragment profileFragment;
+        UsersFragment userFragment;
         public SectionsPagerAdapter(FragmentManager fm, MasterActivity activity) {
             super(fm);
             mActivity = activity;
             restaurantsFragment = RestaurantsFragment.newInstance(mActivity);
             mapFragment = MapFragment.newInstance(mActivity);
             profileFragment = ProfileFragment.newInstance(mActivity);
+            userFragment = UsersFragment.newInstance(mActivity);
         }
 
         @Override
         public Fragment getItem(int position) {
-            switch (position) {
-                case 0: return mapFragment;
-                case 1: return restaurantsFragment;
-                case 2: return profileFragment;
-                default: return null;
+            if (Settings.isUserSeller()) {
+                switch (position) {
+                    case 0: return userFragment;
+                    case 1: return restaurantsFragment;
+                    default: return null;
+                }
+            }else{
+                switch (position) {
+                    case 0: return mapFragment;
+                    case 1: return restaurantsFragment;
+                    case 2: return profileFragment;
+                    default: return null;
+                }
             }
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            if (Settings.isUserSeller()) {
+                // Show 3 total pages.
+                return 2;
+            }else{
+                return 3;
+            }
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0: return "Map";
-                case 1: return "Offers";
-                case 2: return "Profile";
+            if (Settings.isUserSeller()){
+                switch (position) {
+                    case 0: return "Users";
+                    case 1: return "Profile";
+                }
+            }else{
+                switch (position) {
+                    case 0: return "Map";
+                    case 1: return "Offers";
+                    case 2: return "Profile";
+                }
             }
             return null;
         }

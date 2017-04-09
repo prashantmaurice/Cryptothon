@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,13 +17,16 @@ import android.util.Log;
 
 import com.maurice.cryptothon.app.Controllers.ToastMain;
 import com.maurice.cryptothon.app.Dialogs.RestaurantDialog.RestaurantDialog;
+import com.maurice.cryptothon.app.Fragments.Users.UsersFragment;
 import com.maurice.cryptothon.app.Models.RestaurantObj;
+import com.maurice.cryptothon.app.Models.UserObj;
 import com.maurice.cryptothon.app.Utils.Logg;
 import com.maurice.cryptothon.app.Utils.NetworkCallback2;
-import com.maurice.cryptothon.app.Utils.Router;
+import com.maurice.cryptothon.app.Utils.Settings;
 import com.maurice.cryptothon.app.storage.Data;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,6 +36,8 @@ public class MasterBluetoothActivity extends AppCompatActivity {
     int REQUEST_ENABLE_BT = 2004;
     static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 2005;
     Data data;
+    Set<String> prevSet = new HashSet<>();
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +47,37 @@ public class MasterBluetoothActivity extends AppCompatActivity {
         bluetoothUpstart();
         checkPermissions();
         setupTimer();
+//        mActionBar.setBackgroundDrawable(new ColorDrawable(0xff00DDED));
+//        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xff00DDED));
 
 
     }
+    private Handler handler = new Handler();
 
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            Logg.d(TAG , "running timer2");
+//            checkForExits();
+//            bluetoothUpstart();
+//            handler.postDelayed(runnable, 2000);
+        }
+    };
     public void setupTimer(){
+        if (Settings.isUserSeller())
+        handler.postDelayed(runnable, 2000);
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Logg.d(TAG , "running timer");
-                bluetoothUpstart();
+                if (Settings.isUserSeller()){
+                    UsersFragment.instance.completeRefresh();
+                }else{
+                    checkForExits();
+                    bluetoothUpstart();
+                }
             }
-        }, 10000, 10000);
+        }, 1000, Settings.isUserSeller() ? 2000:8000);
 
 //        Handler h = new Handler();
 //        int delay = 3000; //milliseconds
@@ -60,6 +85,52 @@ public class MasterBluetoothActivity extends AppCompatActivity {
 //            public void run(){
 //            }
 //        }, delay);
+    }
+
+
+    public void checkForExits(){
+        if (Settings.isUserSeller()) return;
+        Set<String> newSet = new HashSet<>();
+        newSet.addAll(data.proximityIds);
+        Logg.d(TAG,"checkForExits : "+data.proximityIds);
+        for (String key : newSet){
+            if(!prevSet.contains(key)){
+                Logg.d(TAG,"Newly added : "+key);
+                //Newly added
+                Data.getInstance(MainApplication.getInstance()).postBluetoothAvailability(true, key, new NetworkCallback2<List<UserObj>>() {
+                    @Override
+                    public void onSuccess(List<UserObj> userObjs) {
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+            }
+        }
+
+        for (String key : prevSet){
+            if(!newSet.contains(key)){
+                Logg.d(TAG,"Newly removed : "+key);
+                //Newly removed
+                Data.getInstance(MainApplication.getInstance()).postBluetoothAvailability(false, key, new NetworkCallback2<List<UserObj>>() {
+                    @Override
+                    public void onSuccess(List<UserObj> userObjs) {
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+            }
+        }
+
+        prevSet.clear();
+        prevSet.addAll(data.proximityIds);
     }
 
     public void bluetoothUpstart(){
@@ -99,6 +170,7 @@ public class MasterBluetoothActivity extends AppCompatActivity {
             if (comp.length>1){
                 String id = comp[1];
                 data.proximityIds.add("B"+id);
+                data.zoneTimes.put("B"+id,System.currentTimeMillis());
                 claimForRestaurant("B"+id);
             }
         }
