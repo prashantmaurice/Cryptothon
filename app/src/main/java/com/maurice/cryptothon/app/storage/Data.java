@@ -255,6 +255,35 @@ public class Data {
         });
     }
 
+    public void getClaims(final NetworkCallback2<List<UserObj>> callback){
+        String url = Router.Restaurants.claimedClients();
+        JSONObject jsonObject = new JSONObject();
+
+        MainApplication.getInstance().addRequest(Request.Method.GET, url, jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                Logg.d(TAG, "USER DATA : " + jsonObject.toString());
+                try {
+                    JSONObject data = jsonObject.getJSONObject("data");
+                    JSONArray transactionsJSON = data.getJSONArray("clients");
+                    users.clear();
+                    users.addAll(UserObj.decode(transactionsJSON));
+                    if(callback!=null) callback.onSuccess(users);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Logg.e(TAG, "ERROR : " + volleyError);
+                if(callback!=null) callback.onError();
+            }
+        });
+    }
+
+
     public void postBluetoothAvailability(boolean available, String restaurantId, final NetworkCallback2<List<UserObj>> callback){
         Logg.d("BLUETOORHJKLH","postBluetoothAvailability");
         String url = Router.Restaurants.clients();

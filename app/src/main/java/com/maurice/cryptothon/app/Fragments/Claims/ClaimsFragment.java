@@ -1,4 +1,4 @@
-package com.maurice.cryptothon.app.Fragments.Users;
+package com.maurice.cryptothon.app.Fragments.Claims;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,23 +24,23 @@ import java.util.List;
 /**
  * This is the main fragment user for listing user Notifications
  */
-public class UsersFragment extends android.support.v4.app.Fragment {
+public class ClaimsFragment extends android.support.v4.app.Fragment {
     String TAG = "OFFERSFRAG";
     public MasterActivity mActivity;
     ArrayList<UserObj> restaurants = new ArrayList<>();
     ListView notificationsLV;
     SwipeRefreshLayout refresh_cont;
-    UsersFragAdapter adapter;
+    ClaimsFragAdapter adapter;
     Data data;
 
-    public static UsersFragment instance;
+    public static ClaimsFragment instance;
 
-    public UsersFragment() {
+    public ClaimsFragment() {
         data = Data.getInstance(MainApplication.getInstance());
     }
 
-    public static UsersFragment newInstance(MasterActivity activityContext) {
-        UsersFragment myFragment = new UsersFragment();
+    public static ClaimsFragment newInstance(MasterActivity activityContext) {
+        ClaimsFragment myFragment = new ClaimsFragment();
         myFragment.mActivity = activityContext;
         instance = myFragment;
         return myFragment;
@@ -59,7 +59,7 @@ public class UsersFragment extends android.support.v4.app.Fragment {
         rootView = inflater.inflate(R.layout.fragment_notifications, null);
 
         notificationsLV = (ListView) rootView.findViewById(R.id.notificationsLV);
-        adapter = new UsersFragAdapter(getActivity(), restaurants);
+        adapter = new ClaimsFragAdapter(getActivity(), restaurants);
         notificationsLV.setAdapter(adapter);
         refresh_cont = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_cont);
         refresh_cont.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -77,7 +77,7 @@ public class UsersFragment extends android.support.v4.app.Fragment {
 
     public void completeRefresh(){
         Logg.d(TAG,"completeRefresh");
-        Data.getInstance(mActivity).getUsers(new NetworkCallback2<List<UserObj>>() {
+        Data.getInstance(mActivity).getClaims(new NetworkCallback2<List<UserObj>>() {
             @Override
             public void onSuccess(List<UserObj> objs) {
                 Logg.d(TAG,"completeRefresh onSuccess");
@@ -97,6 +97,9 @@ public class UsersFragment extends android.support.v4.app.Fragment {
         restaurants.clear();
         restaurants.addAll(MainApplication.getInstance().data.users);
         adapter.notifyDataSetChanged();
+
+
+
     }
 
     @Override

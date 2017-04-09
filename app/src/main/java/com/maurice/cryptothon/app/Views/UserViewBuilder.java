@@ -28,20 +28,22 @@ public class UserViewBuilder {
     public static class ViewHolder{
         public View mainView;
         public TextView tv_header, tv_subheader, tv_body,tv_cost;
-        public View menu;
+        public TextView menu;
         public TextView tv_acc_1,tv_acc_2,tv_acc_3,tv_acc_4;
         public Activity mContext;
 
         public ViewHolder(View view, Activity activity) {
             mContext = activity;
             mainView = view;
-            menu = view.findViewById(R.id.menu);
+            menu = (TextView) view.findViewById(R.id.menu);
             tv_header = (TextView) view.findViewById(R.id.tv_header);
             tv_subheader = (TextView) view.findViewById(R.id.tv_subheader);
         }
 
 
-        // TODO - WTF! UserActivityObject and ActivityObject classes?! use ONE dude!
+        public void setText(String text){
+            menu.setText(text);
+        }
 
         public void inflateData(final UserObj msg){
             Logg.d(TAG, "Inflating data in Job view");

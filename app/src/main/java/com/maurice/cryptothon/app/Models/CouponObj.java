@@ -84,6 +84,8 @@ public class CouponObj implements Comparable<CouponObj> {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id",restaurantObj.id);
+            jsonObject.put("clientId","8197711739");
+            jsonObject.put("clientName","Maurice");
         } catch (JSONException e) {e.printStackTrace();}
 
         MainApplication.getInstance().addRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {

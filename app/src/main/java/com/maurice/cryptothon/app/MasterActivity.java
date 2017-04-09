@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.maurice.cryptothon.app.Fragments.Claims.ClaimsFragment;
 import com.maurice.cryptothon.app.Fragments.MapFragment;
 import com.maurice.cryptothon.app.Fragments.Offers.RestaurantsFragment;
 import com.maurice.cryptothon.app.Fragments.Profile.ProfileFragment;
@@ -101,6 +102,7 @@ public class MasterActivity extends MasterBluetoothActivity {
         MapFragment mapFragment;
         ProfileFragment profileFragment;
         UsersFragment userFragment;
+        ClaimsFragment claimsFragment;
         public SectionsPagerAdapter(FragmentManager fm, MasterActivity activity) {
             super(fm);
             mActivity = activity;
@@ -108,6 +110,7 @@ public class MasterActivity extends MasterBluetoothActivity {
             mapFragment = MapFragment.newInstance(mActivity);
             profileFragment = ProfileFragment.newInstance(mActivity);
             userFragment = UsersFragment.newInstance(mActivity);
+            claimsFragment = ClaimsFragment.newInstance(mActivity);
         }
 
         @Override
@@ -115,7 +118,7 @@ public class MasterActivity extends MasterBluetoothActivity {
             if (Settings.isUserSeller()) {
                 switch (position) {
                     case 0: return userFragment;
-                    case 1: return restaurantsFragment;
+                    case 1: return claimsFragment;
                     default: return null;
                 }
             }else{
@@ -143,7 +146,7 @@ public class MasterActivity extends MasterBluetoothActivity {
             if (Settings.isUserSeller()){
                 switch (position) {
                     case 0: return "Users";
-                    case 1: return "Profile";
+                    case 1: return "CheckIns";
                 }
             }else{
                 switch (position) {

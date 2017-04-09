@@ -17,6 +17,7 @@ import android.util.Log;
 
 import com.maurice.cryptothon.app.Controllers.ToastMain;
 import com.maurice.cryptothon.app.Dialogs.RestaurantDialog.RestaurantDialog;
+import com.maurice.cryptothon.app.Fragments.Claims.ClaimsFragment;
 import com.maurice.cryptothon.app.Fragments.Users.UsersFragment;
 import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.Models.UserObj;
@@ -72,6 +73,7 @@ public class MasterBluetoothActivity extends AppCompatActivity {
                 Logg.d(TAG , "running timer");
                 if (Settings.isUserSeller()){
                     UsersFragment.instance.completeRefresh();
+                    ClaimsFragment.instance.completeRefresh();
                 }else{
                     checkForExits();
                     bluetoothUpstart();
@@ -164,6 +166,7 @@ public class MasterBluetoothActivity extends AppCompatActivity {
 
 
     public void checkIfInLocation(BluetoothDevice device){
+        if(Settings.isUserSeller()) return;
         String name = device.getName();
         if ( name !=null && name.contains("#B")){
             String[] comp = name.split("#B");

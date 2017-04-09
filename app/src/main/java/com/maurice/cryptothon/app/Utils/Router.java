@@ -75,6 +75,10 @@ public class Router {
             return getSubPath().appendPath("clients").appendQueryParameter("restaurantId","B1234").build().toString();
         }
 
+        public static String claimedClients(){
+            return getSubPath().appendPath("claimedClients").appendQueryParameter("restaurantId","B1234").build().toString();
+        }
+
     }
 
     public static class User{
