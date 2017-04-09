@@ -1,5 +1,6 @@
 package com.maurice.cryptothon.app;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -44,6 +45,7 @@ public class MasterActivity extends MasterBluetoothActivity {
         setContentView(R.layout.activity_master);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (Settings.isUserSeller()) toolbar.setBackgroundColor(Color.MAGENTA);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.

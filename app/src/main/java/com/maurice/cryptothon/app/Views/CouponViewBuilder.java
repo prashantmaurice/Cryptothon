@@ -55,7 +55,7 @@ public class CouponViewBuilder {
         // TODO - WTF! UserActivityObject and ActivityObject classes?! use ONE dude!
 
         public void inflateData(final CouponObj couponObj, final RestaurantObj restaurantObj, final SuccessCallback callback){
-            Logg.d(TAG, "Inflating data in Job view");
+            Logg.d(TAG, "Inflating data in Job view"+couponObj.claimed);
             tv_header.setText(couponObj.name);
             tv_subheader.setText(""+couponObj.name);
             refreshUI(couponObj,restaurantObj);
@@ -64,8 +64,8 @@ public class CouponViewBuilder {
                 public void onClick(View view) {
                     if (couponObj.claimed){
                         ToastMain.showSmartToast(mContext,"Already Claimed");
-                    }else if(Data.getInstance(MainApplication.getInstance()).isInProximity(restaurantObj.id)){
-                        ToastMain.showSmartToast(mContext,"Already Claimed");
+                    }else if(!Data.getInstance(MainApplication.getInstance()).isInProximity(restaurantObj.id)){
+                        ToastMain.showSmartToast(mContext,"Is not in Proximity");
                     }else{
                         switch (couponObj.type){
                             case "checkin":claimCheckin(couponObj,restaurantObj,callback);break;

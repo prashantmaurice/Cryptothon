@@ -32,7 +32,7 @@ public class Settings {
     }
 
 
-//    private final static UserMode userMode = UserMode.BUYER;
-    private final static UserMode userMode = UserMode.SELLER;
+    private final static UserMode userMode = UserMode.BUYER;
+//    private final static UserMode userMode = UserMode.SELLER;
 }
 

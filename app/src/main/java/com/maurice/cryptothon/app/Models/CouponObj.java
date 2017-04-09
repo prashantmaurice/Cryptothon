@@ -23,7 +23,7 @@ public class CouponObj implements Comparable<CouponObj> {
     public String type = "checkin";//"checkin", "feedback"
     public double lat,lng,value;
     public String address;
-    public Boolean claimed;
+    public boolean claimed;
     public int questionsAnswered;
     public List<QuestionObj> questions = new ArrayList<>();
 
@@ -91,7 +91,7 @@ public class CouponObj implements Comparable<CouponObj> {
         MainApplication.getInstance().addRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                Logg.d(TAG, "USER DATA : " + jsonObject.toString());
+                Logg.d(TAG, "CLAIM DATA : " + jsonObject.toString());
                 try {
 //                    JSONObject result = jsonObject.getJSONObject("data");
 //                    JSONArray offersJSON = result.getJSONArray("restaurents");

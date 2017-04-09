@@ -79,7 +79,7 @@ public class MasterBluetoothActivity extends AppCompatActivity {
                     bluetoothUpstart();
                 }
             }
-        }, 1000, Settings.isUserSeller() ? 2000:8000);
+        }, 1000, Settings.isUserSeller() ? 2000:20000);
 
 //        Handler h = new Handler();
 //        int delay = 3000; //milliseconds
