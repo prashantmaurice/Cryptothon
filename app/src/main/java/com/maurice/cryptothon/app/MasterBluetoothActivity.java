@@ -19,6 +19,7 @@ import com.maurice.cryptothon.app.Dialogs.RestaurantDialog.RestaurantDialog;
 import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.Utils.Logg;
 import com.maurice.cryptothon.app.Utils.NetworkCallback2;
+import com.maurice.cryptothon.app.Utils.Router;
 import com.maurice.cryptothon.app.storage.Data;
 
 import java.util.HashSet;
@@ -30,10 +31,12 @@ public class MasterBluetoothActivity extends AppCompatActivity {
     String TAG = "BLUETOOTH.ACTIVITY";
     int REQUEST_ENABLE_BT = 2004;
     static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 2005;
+    Data data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        data = Data.getInstance(MainApplication.getInstance());
         attachReceivers();
         bluetoothUpstart();
         checkPermissions();
@@ -84,6 +87,7 @@ public class MasterBluetoothActivity extends AppCompatActivity {
         if (mBluetoothAdapter.isDiscovering()){
             mBluetoothAdapter.cancelDiscovery();
         }
+        data.proximityIds.clear();
         mBluetoothAdapter.startDiscovery();
     }
 
@@ -94,6 +98,7 @@ public class MasterBluetoothActivity extends AppCompatActivity {
             String[] comp = name.split("#B");
             if (comp.length>1){
                 String id = comp[1];
+                data.proximityIds.add("B"+id);
                 claimForRestaurant("B"+id);
             }
         }
@@ -222,4 +227,6 @@ public class MasterBluetoothActivity extends AppCompatActivity {
         // Don't forget to unregister the ACTION_FOUND receiver.
         unregisterReceiver(mReceiver);
     }
+
+
 }

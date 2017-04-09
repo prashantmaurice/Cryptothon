@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class MenuItemObj implements Comparable<MenuItemObj> {
-    String TAG = "QUESTION.MODEL";
+    String TAG = "MENUITEM.MODEL";
     public String name = "";
     public int val = 0;
 

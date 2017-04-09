@@ -19,7 +19,7 @@ public class CouponObj implements Comparable<CouponObj> {
     String TAG = "COUPON.MODEL";
     public String id = "";
     public String name = "";
-    public String desc = "";
+    public String description = "";
     public String type = "checkin";//"checkin", "feedback"
     public double lat,lng,value;
     public String address;
@@ -36,7 +36,7 @@ public class CouponObj implements Comparable<CouponObj> {
         try {
             re.id = (obj.has("id")) ? obj.getString("id") : null;
             re.name = (obj.has("name")) ? obj.getString("name") : "No name";
-            re.desc = (obj.has("desc")) ? obj.getString("desc") : "No description";
+            re.description = (obj.has("description")) ? obj.getString("description") : "No description";
             re.type = (obj.has("type")) ? obj.getString("type") : "checkin";
             re.lat = (obj.has("lat")) ? obj.getDouble("lat") : 0;
             re.lng = (obj.has("lng")) ? obj.getDouble("lng") : 0;

@@ -15,6 +15,7 @@ import android.view.View;
 
 import com.maurice.cryptothon.app.Fragments.MapFragment;
 import com.maurice.cryptothon.app.Fragments.Offers.RestaurantsFragment;
+import com.maurice.cryptothon.app.Fragments.Profile.ProfileFragment;
 
 public class MasterActivity extends MasterBluetoothActivity {
 
@@ -96,11 +97,13 @@ public class MasterActivity extends MasterBluetoothActivity {
         MasterActivity mActivity;
         RestaurantsFragment restaurantsFragment;
         MapFragment mapFragment;
+        ProfileFragment profileFragment;
         public SectionsPagerAdapter(FragmentManager fm, MasterActivity activity) {
             super(fm);
             mActivity = activity;
             restaurantsFragment = RestaurantsFragment.newInstance(mActivity);
             mapFragment = MapFragment.newInstance(mActivity);
+            profileFragment = ProfileFragment.newInstance(mActivity);
         }
 
         @Override
@@ -108,7 +111,7 @@ public class MasterActivity extends MasterBluetoothActivity {
             switch (position) {
                 case 0: return mapFragment;
                 case 1: return restaurantsFragment;
-                case 2: return new MapFragment();
+                case 2: return profileFragment;
                 default: return null;
             }
         }
@@ -124,7 +127,7 @@ public class MasterActivity extends MasterBluetoothActivity {
             switch (position) {
                 case 0: return "Map";
                 case 1: return "Offers";
-                case 2: return "SECTION 3";
+                case 2: return "Profile";
             }
             return null;
         }

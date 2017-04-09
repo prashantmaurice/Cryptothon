@@ -8,12 +8,14 @@ import android.widget.TextView;
 
 import com.maurice.cryptothon.app.Controllers.ToastMain;
 import com.maurice.cryptothon.app.Dialogs.FeedbackDialog.FeedbackDialog;
+import com.maurice.cryptothon.app.MainApplication;
 import com.maurice.cryptothon.app.Models.CouponObj;
 import com.maurice.cryptothon.app.Models.RestaurantObj;
 import com.maurice.cryptothon.app.R;
 import com.maurice.cryptothon.app.Utils.Logg;
 import com.maurice.cryptothon.app.Utils.NetworkCallback;
 import com.maurice.cryptothon.app.Utils.SuccessCallback;
+import com.maurice.cryptothon.app.storage.Data;
 
 
 /**
@@ -56,11 +58,13 @@ public class CouponViewBuilder {
             Logg.d(TAG, "Inflating data in Job view");
             tv_header.setText(couponObj.name);
             tv_subheader.setText(""+couponObj.name);
-            refreshUI(couponObj);
+            refreshUI(couponObj,restaurantObj);
             claim.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (couponObj.claimed){
+                        ToastMain.showSmartToast(mContext,"Already Claimed");
+                    }else if(Data.getInstance(MainApplication.getInstance()).isInProximity(restaurantObj.id)){
                         ToastMain.showSmartToast(mContext,"Already Claimed");
                     }else{
                         switch (couponObj.type){
@@ -85,7 +89,7 @@ public class CouponViewBuilder {
                 @Override
                 public void onSuccess() {
                     couponObj.claimed = true;
-                    refreshUI(couponObj);
+                    refreshUI(couponObj,restaurantObj);
                     ToastMain.showSmartToast(mContext,"Successfully Claimed");
                     callback.onSuccess();
                 }
@@ -97,10 +101,13 @@ public class CouponViewBuilder {
             });
         }
 
-        public void refreshUI(CouponObj couponObj){
-            leftcont.setBackgroundResource(!couponObj.claimed ? R.color.colorPrimary : R.color.green);
-            claim.setBackgroundResource(!couponObj.claimed ? R.color.colorPrimaryDark : R.color.greenDark);
+        public void refreshUI(CouponObj couponObj, RestaurantObj restaurantObj){
+            boolean isInProximity = Data.getInstance(MainApplication.getInstance()).isInProximity(restaurantObj.id);
+            leftcont.setBackgroundResource(!couponObj.claimed ? (isInProximity? R.color.colorPrimary : R.color.gray) : R.color.green);
+            claim.setBackgroundResource(!couponObj.claimed ? (isInProximity? R.color.colorPrimaryDark : R.color.grayDark)  : R.color.greenDark);
             claim.setText(!couponObj.claimed ? "Claim" : "Claimed");
+
+
         }
 
 

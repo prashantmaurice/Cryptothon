@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--<string name="local_ip">192.173.5.112:5000</string>-->
-    <string name="local_ip">192.173.5.89:5000</string>
+    <string name="local_ip">192.173.5.90:8888</string>
     <string name="api_key_android">tandom</string><!-- Maurice debug.keystore key-->
 </resources>

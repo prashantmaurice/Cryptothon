@@ -52,7 +52,7 @@ public class Router {
     public static class Restaurants {
 
         static Uri.Builder getSubPath(){
-            return getNewDefaultBuilder().path("api/restaurants");
+            return getNewDefaultBuilder().path("cryptothon/api/restaurants");
         }
 
         public static String all(){
@@ -73,16 +73,13 @@ public class Router {
 
     }
 
-    public static class Curate{
+    public static class User{
 
-        public static String editBucket(){
-            return getNewDefaultBuilder().path("data/editbucket")
-                    .appendQueryParameter("access_token", getServerToken()).build().toString();
+        static Uri.Builder getSubPath(){
+            return getNewDefaultBuilder().path("cryptothon/api/users");
         }
-        public static String deleteRegex(String regexId){
-            return getNewDefaultBuilder().path("data/deleteregex")
-                    .appendQueryParameter("regexId", regexId)
-                    .appendQueryParameter("access_token", getServerToken()).build().toString();
+        public static String transactions(){
+            return getSubPath().appendPath("getAllTransactions").build().toString();
         }
 
     }
